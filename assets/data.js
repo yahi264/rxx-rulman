@@ -1,0 +1,195 @@
+/* ==========================================================================
+   RXX Rulman — site content (TR / EN)
+   Brand anonymised as "RXX" for the proposal; contact details are placeholders.
+   ========================================================================== */
+const IMG = 'assets/img/';
+const FILES = ''; // catalogue host (set at launch)
+
+const COMPANY = {
+  name: 'RXX',
+  legal: 'RXX Rulman ve Güç Aktarım',
+  address: '00 Sanayi Sitesi, 0000. Cadde No:00, 00000 Türkiye',
+  phones: ['+00 000 000 00 00', '+00 000 000 00 00', '+00 000 000 00 00'],
+  phoneHref: 'tel:+000000000000',
+  email: 'satis@rxx.com.tr',
+  whatsapp: 'https://wa.me/000000000000',
+  maps: 'https://www.google.com/maps/search/?api=1&query=T%C3%BCrkiye',
+  social: { facebook: 'https://www.facebook.com/', instagram: 'https://www.instagram.com/', linkedin: 'https://www.linkedin.com/' },
+  since: 1982, sectorSince: 1973, staff: 15,
+};
+
+/* Top-level categories (order and images follow the current site) */
+const CATS = [
+  { id: 'skf-urunleri', img: '2021/02/skf.jpg', brand: 'SKF', icon: 'bearing',
+    name: { tr: 'SKF Ürünleri', en: 'SKF Products' },
+    desc: { tr: 'Rulmanlar, güç aktarım, yağlama sistemleri, endüstriyel conta-keçeler ve bakım ürünleri.', en: 'Bearings, power transmission, lubrication systems, industrial seals and maintenance products.' } },
+  { id: 'optibelt-guc-aktarma', img: '2021/03/optibelthome-img.png', brand: 'Optibelt', icon: 'belt',
+    name: { tr: 'Optibelt Güç Aktarma', en: 'Optibelt Power Transmission' },
+    desc: { tr: 'V kayışlar, triger kayışlar, kasnaklar, burçlar, kaplinler ve zincirler.', en: 'V-belts, timing belts, pulleys, bushes, couplings and chains.' } },
+  { id: 'rulmanlar', img: '2021/05/rulman-img.jpg', icon: 'bearing',
+    name: { tr: 'Rulmanlar', en: 'Bearings' },
+    desc: { tr: 'NACHI, KG, FAG, TIMKEN ve ORS markalı her tip ve ölçüde rulman.', en: 'Bearings of every type and size from NACHI, KG, FAG, TIMKEN and ORS.' } },
+  { id: 'rulman-yataklari', img: '2021/02/rulman-yataklari.jpg', icon: 'housing',
+    name: { tr: 'Rulman Yatakları', en: 'Bearing Housings' },
+    desc: { tr: 'SKF ve HCB yataklı rulmanlar, SNL ve SONL gövdeler, Y-rulman üniteleri.', en: 'SKF and HCB housed units, SNL and SONL plummer blocks, Y-bearing units.' } },
+  { id: 'elektrik-motorlari', img: '2021/02/Elektrik-motoru-1.jpg', icon: 'motor',
+    name: { tr: 'Elektrik Motorları', en: 'Electric Motors' },
+    desc: { tr: 'Elsan, Emtaş ve Gamak norm ve vibrasyon motorları.', en: 'Standard and vibration motors from Elsan, Emtaş and Gamak.' } },
+  { id: 'reduktor', img: '2021/02/reduktor.jpg', icon: 'gear',
+    name: { tr: 'Redüktör', en: 'Gear Reducers' },
+    desc: { tr: 'Armut tipi ve kademeli redüktörler; Dişsan ve Yılmaz redüktör.', en: 'Worm and helical gear reducers; Dişsan and Yılmaz gearboxes.' } },
+  { id: 'konik-kilit-sistemleri', img: '2021/06/konik-kilit-home.jpg', brand: 'RX', icon: 'lock',
+    name: { tr: 'Konik Kilit Sistemleri', en: 'Locking Assemblies' },
+    desc: { tr: 'Konik kilitler, sıkma bilezikleri, kaplinler, shrink diskler ve kilitleme elemanları.', en: 'Locking assemblies, clamping rings, couplings, shrink discs and locking elements.' } },
+  { id: 'elek-telleri', img: '2021/02/elek-teli-1.png', brand: 'Madser', icon: 'mesh',
+    name: { tr: 'Elek Telleri', en: 'Screen Meshes' },
+    desc: { tr: 'Çelik elek telleri ve elek montaj ekipmanları.', en: 'Steel screen meshes and screen mounting equipment.' } },
+  { id: 'konveyor-bant', img: '2021/03/konveyor-bant.jpg', icon: 'conveyor',
+    name: { tr: 'Konveyör Bant', en: 'Conveyor Belts' },
+    desc: { tr: 'Kauçuk konveyör bantlar, raptiyeler, raptiye anahtarları, delme zımbaları ve bant bıçakları.', en: 'Rubber conveyor belts, fasteners, fastener tools, punches and belt cutters.' } },
+  { id: 'konveyor-bant-rulolari', img: '2021/03/img-konveyor-bant.jpg', icon: 'roller',
+    name: { tr: 'Konveyör Bant Ruloları', en: 'Conveyor Rollers' },
+    desc: { tr: 'Taşıyıcı, dönüş ve darbe ruloları.', en: 'Carrying, return and impact idlers.' } },
+  { id: 'konveyor-bant-tamburlari', img: '2021/03/bant-tambur-img.jpg', brand: 'Madser', icon: 'roller',
+    name: { tr: 'Konveyör Bant Tamburları', en: 'Conveyor Pulleys' },
+    desc: { tr: 'Tahrik, saptırma ve kuyruk tamburları.', en: 'Drive, bend and tail pulleys.' } },
+  { id: 'konveyor-bant-miknatislari', img: '2021/03/HOME-img-miknatis.jpg', icon: 'magnet',
+    name: { tr: 'Konveyör Bant Mıknatısları', en: 'Conveyor Magnets' },
+    desc: { tr: 'Askı tipi overband mıknatıslar ve teknik ölçüleri.', en: 'Suspended overband magnets and their dimensions.' } },
+  { id: 'konveyor-bant-metal-dedektorleri', img: '2021/03/home-urun-img-9.jpg', icon: 'radar',
+    name: { tr: 'Konveyör Bant Metal Dedektörleri', en: 'Conveyor Metal Detectors' },
+    desc: { tr: 'Tek ve çift sensörlü, tünel tip dedektörler ve metal seperatörler.', en: 'Single and dual sensor, tunnel type detectors and metal separators.' } },
+  { id: 'konkasor-yedek-parcalari', img: '2021/03/konkasor-yedek-img.jpg', icon: 'crusher',
+    name: { tr: 'Konkasör Yedek Parçaları', en: 'Crusher Spare Parts' },
+    desc: { tr: 'Kırıcı ve konkasörler için aşınma ve yedek parçalar.', en: 'Wear and spare parts for crushers.' } },
+  { id: 'hirdavat-malzemeleri', img: '2021/03/Hirdavat-img-home.jpg', icon: 'tools',
+    name: { tr: 'Hırdavat Malzemeleri', en: 'Hardware & Tools' },
+    desc: { tr: 'Bosch, Makita, İzeltaş, Loctite, 3M, Altaş, Askaynak, Karbosan ve iş eldivenleri.', en: 'Bosch, Makita, İzeltaş, Loctite, 3M, Altaş, Askaynak, Karbosan and work gloves.' } },
+];
+
+/* Brands carried (the in-house locking assembly line is shown as "RX") */
+const BRANDS = ['SKF', 'FAG', 'TIMKEN', 'NACHI', 'ORS', 'HCB', 'KG', 'Optibelt', 'RX', 'Elsan', 'Emtaş', 'Gamak', 'Dişsan', 'Yılmaz', 'Madser', 'Bosch', 'Makita', 'İzeltaş', 'Loctite', '3M', 'Altaş', 'Askaynak', 'Karbosan'];
+const FEATURED_BRANDS = ['SKF', 'OPTIBELT', 'RX', 'FAG', 'NACHI', 'ORS', 'TIMKEN', 'HCB'];
+
+/* ---------------- UI strings ---------------- */
+const I18N = {
+  tr: {
+    home: 'Ana Sayfa', about: 'Hakkımızda', products: 'Ürünlerimiz', training: 'Eğitim', contact: 'İletişim', library: 'Katalog Kütüphanesi', decoder: 'Rulman Kodu Çözücü', quote: 'Teklif Listesi',
+    search: 'Ürün, marka veya katalog ara…', menu: 'Menü',
+    heroKicker: '1982\'den beri · Rulman ve güç aktarımında çözüm ortağınız',
+    heroTitle: 'Dönen her şeyin <em>arkasındayız.</em>',
+    heroLead: 'SKF, FAG, TIMKEN, NACHI ve Optibelt başta olmak üzere dünya markalarının rulman, yatak, kayış, redüktör, motor ve konveyör ürünlerini tek çatı altında sunuyoruz. Doğru parça, stoktan, hemen.',
+    heroCta: 'Ürünleri keşfet', heroCta2: 'Rulman kodunu çöz',
+    s1: 'Kuruluş', s2: 'Yıllık sektör tecrübesi', s3: 'Uzman personel', s4: 'Ürün ve katalog', s5: 'Dünya markası',
+    catsTitle: 'Ürün gruplarımız', catsLead: '15 ana grupta 150\'den fazla ürün ve marka kataloğu.',
+    decTitle: 'Rulman kodunu yazın, ne olduğunu görün.', decLead: 'Örneğin 6205-2RS C3, 22220 EK, NU 210 ECP veya 30206. Tipi, iç çapı, boyut serisini, sızdırmazlığı ve boşluğu anında açıklıyoruz.',
+    decPh: 'Rulman kodu, örn. 6205-2RS C3', decBtn: 'Çöz', decTry: 'Deneyin:', decType: 'Rulman tipi', decBore: 'İç çap (d)', decOuter: 'Dış çap (D)', decWidth: 'Genişlik (B)', decSeries: 'Boyut serisi', decSuffix: 'Ekler', decNote: 'Ölçüler ISO boyut serisine göre tahminidir; sipariş öncesi katalogdan teyit edin.', decUnknown: 'Bu kodu tanıyamadık. Ekibimiz yardımcı olsun:', decAsk: 'Bu rulman için teklif iste',
+    whyTitle: 'Neden RXX?',
+    why: [['Güvenilir', '1982\'den beri sektörün öncü firmalarından biri.'], ['Çözüm odaklı', '15 kişilik profesyonel, deneyimli ekip.'], ['Geniş stok', 'Dünya markalarının ürünleri depomuzda, hızlı teslim.'], ['Teknik destek ve eğitim', 'Montaj, bakım ve ürün eğitimleri, kendi eğitim salonumuzda.']],
+    quality: 'Kalite Politikamız', qualityText: 'Müşteri memnuniyetini daima ön planda tutmak, sunulan mal ve hizmetlerin kalitesinin her zaman aynı standart ölçü ve özellikte olmasına çalışmak.',
+    brandsTitle: 'Çalıştığımız markalar',
+    trainingTeaser: 'Ürünlerimizin sökme, takma ve bakımını deneyimli mühendislerimizden öğrenin.',
+    ctaTitle: 'Aradığınız parçayı birlikte bulalım.', ctaLead: 'Rulman kodunu, ölçüsünü ya da fotoğrafını gönderin; stok ve fiyat bilgisini hemen iletelim.',
+    allProducts: 'Tüm ürünler', items: 'ürün', catalogs: 'katalog', viewCatalog: 'Kataloğu aç', addQuote: 'Teklife ekle', added: 'Eklendi', open: 'İncele', back: 'Geri', results: 'sonuç', noResults: 'Sonuç bulunamadı.',
+    libLead: 'Tüm marka kataloglarını ve teknik dokümanları tek yerden arayın, filtreleyin.', allBrands: 'Tüm markalar',
+    quoteEmpty: 'Teklif listeniz boş. Ürün sayfalarındaki "Teklife ekle" düğmesiyle ürün ekleyin.', quoteLead: 'Listenizdeki ürünler için fiyat ve stok bilgisi isteyin.', qty: 'Adet', remove: 'Kaldır', sendWa: 'WhatsApp ile gönder', sendForm: 'Formla gönder', clear: 'Listeyi temizle',
+    name: 'Ad Soyad', company: 'Firma', email: 'E-posta', phone: 'Telefon', subject: 'Konu', message: 'Mesajınız', send: 'Gönder', note: 'Not',
+    formOk: '✓ Teşekkürler! Mesajınız alındı, en kısa sürede dönüş yapacağız.', formErr: 'Lütfen işaretli alanları doldurun.',
+    address: 'Adres', openMap: 'Haritada aç', contactForm: 'İletişim Formu', contactLead: 'Sorularınız, teklif talepleriniz ve teknik destek için bize ulaşın.',
+    footerAbout: 'Rulman, yatak, güç aktarım, redüktör, elektrik motoru ve konveyör ürünlerinde 1982\'den beri çözüm ortağınız.',
+    rights: 'Tüm hakları saklıdır.', follow: 'Bizi takip edin', corporate: 'Kurumsal', trainingReq: 'Eğitim talebi', topic: 'Eğitim konusu', participants: 'Katılımcı sayısı',
+    pdfDemo: 'Sunum sürümü: gerçek kataloglar yayın sırasında bağlanacaktır.', askAI: 'Asistana sor',
+  },
+  en: {
+    home: 'Home', about: 'About Us', products: 'Products', training: 'Training', contact: 'Contact', library: 'Catalogue Library', decoder: 'Bearing Code Decoder', quote: 'Quote List',
+    search: 'Search products, brands or catalogues…', menu: 'Menu',
+    heroKicker: 'Since 1982 · Your partner in bearings and power transmission',
+    heroTitle: 'Behind everything <em>that turns.</em>',
+    heroLead: 'Bearings, housings, belts, gear reducers, motors and conveyor parts from SKF, FAG, TIMKEN, NACHI, Optibelt and other world brands, under one roof. The right part, from stock, right away.',
+    heroCta: 'Explore products', heroCta2: 'Decode a bearing',
+    s1: 'Founded', s2: 'Years in the industry', s3: 'Specialists', s4: 'Products & catalogues', s5: 'World brands',
+    catsTitle: 'Product groups', catsLead: 'More than 150 products and brand catalogues in 15 groups.',
+    decTitle: 'Type a bearing code, see what it means.', decLead: 'For example 6205-2RS C3, 22220 EK, NU 210 ECP or 30206. We explain the type, bore, dimension series, sealing and clearance instantly.',
+    decPh: 'Bearing code, e.g. 6205-2RS C3', decBtn: 'Decode', decTry: 'Try:', decType: 'Bearing type', decBore: 'Bore (d)', decOuter: 'Outside diameter (D)', decWidth: 'Width (B)', decSeries: 'Dimension series', decSuffix: 'Suffixes', decNote: 'Dimensions are estimated from the ISO dimension series; confirm in the catalogue before ordering.', decUnknown: 'We could not recognise this code. Our team can help:', decAsk: 'Request a quote for this bearing',
+    whyTitle: 'Why RXX?',
+    why: [['Reliable', 'One of the leading companies in the sector since 1982.'], ['Solution focused', 'A professional, experienced team of 15.'], ['Large stock', 'World brands in our warehouse, delivered fast.'], ['Support & training', 'Mounting, maintenance and product training in our own training room.']],
+    quality: 'Quality Policy', qualityText: 'To always put customer satisfaction first and keep the quality of our products and services at the same standard, every time.',
+    brandsTitle: 'Brands we carry',
+    trainingTeaser: 'Learn how to mount, dismount and maintain our products from experienced engineers.',
+    ctaTitle: 'Let\'s find the part you need.', ctaLead: 'Send the bearing code, dimensions or a photo; we\'ll reply with stock and price.',
+    allProducts: 'All products', items: 'items', catalogs: 'catalogues', viewCatalog: 'Open catalogue', addQuote: 'Add to quote', added: 'Added', open: 'View', back: 'Back', results: 'results', noResults: 'No results found.',
+    libLead: 'Search and filter every brand catalogue and technical document in one place.', allBrands: 'All brands',
+    quoteEmpty: 'Your quote list is empty. Add products with the "Add to quote" button.', quoteLead: 'Request price and stock for the products in your list.', qty: 'Qty', remove: 'Remove', sendWa: 'Send via WhatsApp', sendForm: 'Send with form', clear: 'Clear list',
+    name: 'Full name', company: 'Company', email: 'Email', phone: 'Phone', subject: 'Subject', message: 'Message', send: 'Send', note: 'Note',
+    formOk: '✓ Thank you! We received your message and will get back to you shortly.', formErr: 'Please fill in the highlighted fields.',
+    address: 'Address', openMap: 'Open in maps', contactForm: 'Contact Form', contactLead: 'Get in touch for questions, quotes and technical support.',
+    footerAbout: 'Your partner in bearings, housings, power transmission, gear reducers, electric motors and conveyor products since 1982.',
+    rights: 'All rights reserved.', follow: 'Follow us', corporate: 'Company', trainingReq: 'Training request', topic: 'Training topic', participants: 'Participants',
+    pdfDemo: 'Presentation version: the real catalogues will be linked at launch.', askAI: 'Ask the assistant',
+  },
+};
+
+/* ---------------- Pages ---------------- */
+const PAGES = {
+  about: {
+    tr: ['1973 yılından itibaren sektörün içinde yer alan RXX\'in sahipleri, 1982 yılında kendi firmasıyla sektörel firmalar arasında yerini almıştır. Çalışma faaliyetlerini ve sektörel çeşitliliğini artırarak bir atılım içerisine giren firmamız gerek hizmet anlayışı gerekse personel bakımından hedeflediği noktaya emin adımlarla ilerlemektedir.',
+         'RXX, 2010 yılında çalışma ofisini ve depolarını çağın gereklerine uygun yeni ve teknolojik bir mekâna taşımış, müşteri memnuniyetini daima ön planda tutmuştur.',
+         'Hedefimiz; bilim ve teknolojinin yeni yüzyıldaki hızlı değişimine ayak uydurmak, yapılacak işleri zamanında, eksiksiz ve kaliteli yaparak sektörün öncü firmaları arasında yükselen bir değer olmaktır.'],
+    en: ['The owners of RXX have been part of the industry since 1973, and in 1982 they took their place among the sector\'s companies with their own firm. By growing its activities and product range, the company keeps moving confidently towards its goals in both service and people.',
+         'In 2010, RXX moved its office and warehouses to a new, modern facility built for today\'s needs, always keeping customer satisfaction first.',
+         'Our goal is to keep pace with the rapid change of science and technology, and to be a rising name among the leading companies of the sector by delivering every job on time, complete and to a high standard.'],
+  },
+  timeline: [
+    ['1973', { tr: 'Kurucular sektöre adım atıyor', en: 'The founders enter the industry' }],
+    ['1982', { tr: 'Firma kuruluyor', en: 'The company is founded' }],
+    ['2010', { tr: 'Yeni, modern ofis ve depolara taşınma', en: 'Move to a new, modern office and warehouse' }],
+    ['Bugün', { tr: '15 kişilik ekip, 20+ dünya markası', en: 'A team of 15, 20+ world brands' }],
+  ],
+  training: {
+    tr: ['Merkezimizde, modern ve teknolojik tüm imkânlar düşünülerek tefriş edilmiş eğitim salonlarımız mevcuttur. İhtiyaçlar doğrultusunda teknik ekibimiz tarafından müşterilerimize eğitim alma imkânı sağlanmaktadır. Bunun yanı sıra ana tedarikçilerimizin sağladığı kurslardan da müşterilerimizin yararlanması mümkündür.',
+         'Kurslar teknik ekibimizdeki tecrübeli mühendisler tarafından veriliyor ve önemli bir bölümü uygulamaya yöneliktir. Video ve projeksiyon sistemlerimiz sayesinde eğitici filmler izleyerek sattığımız tüm ürünlerin sökme, takma ve bakım pratiğinin doğrularını yakından izleyebilirsiniz.'],
+    en: ['Our centre has training rooms equipped with modern technology. Our technical team provides training to customers based on their needs, and customers can also join courses offered by our main suppliers.',
+         'Courses are given by experienced engineers from our technical team, and much of the content is hands-on. With our video and projection systems you can watch training films showing the correct way to mount, dismount and maintain every product we sell.'],
+  },
+  modules: [
+    ['bearing', { tr: 'Rulman montaj ve demontajı', en: 'Bearing mounting and dismounting' }, { tr: 'Doğru alet seçimi, ısıtma, hidrolik yöntemler', en: 'Choosing tools, heating and hydraulic methods' }],
+    ['drop', { tr: 'Yağlama ve gres seçimi', en: 'Lubrication and grease selection' }, { tr: 'Doğru yağ, miktar ve periyot', en: 'The right lubricant, quantity and interval' }],
+    ['belt', { tr: 'Kayış ve kasnak hizalama', en: 'Belt and pulley alignment' }, { tr: 'Gerdirme, hizalama ve ömür', en: 'Tensioning, alignment and service life' }],
+    ['radar', { tr: 'Arıza analizi', en: 'Failure analysis' }, { tr: 'Hasar tiplerini tanıma ve önleme', en: 'Recognising and preventing damage' }],
+  ],
+};
+
+/* ---------------- Bearing decoder reference ---------------- */
+// Boundary dimensions [D, B] by bore code for ISO dimension series 10 (60xx), 02 (62xx) and 03 (63xx)
+const DIMS = {
+  '0': { '00': [26, 8], '01': [28, 8], '02': [32, 9], '03': [35, 10], '04': [42, 12], '05': [47, 12], '06': [55, 13], '07': [62, 14], '08': [68, 15], '09': [75, 16], '10': [80, 16], '11': [90, 18], '12': [95, 18], '13': [100, 18], '14': [110, 20], '15': [115, 20], '16': [125, 22], '17': [130, 22], '18': [140, 24], '19': [145, 24], '20': [150, 24] },
+  '2': { '00': [30, 9], '01': [32, 10], '02': [35, 11], '03': [40, 12], '04': [47, 14], '05': [52, 15], '06': [62, 16], '07': [72, 17], '08': [80, 18], '09': [85, 19], '10': [90, 20], '11': [100, 21], '12': [110, 22], '13': [120, 23], '14': [125, 24], '15': [130, 25], '16': [140, 26], '17': [150, 28], '18': [160, 30], '19': [170, 32], '20': [180, 34] },
+  '3': { '00': [35, 11], '01': [37, 12], '02': [42, 13], '03': [47, 14], '04': [52, 15], '05': [62, 17], '06': [72, 19], '07': [80, 21], '08': [90, 23], '09': [100, 25], '10': [110, 27], '11': [120, 29], '12': [130, 31], '13': [140, 33], '14': [150, 35], '15': [160, 37], '16': [170, 39], '17': [180, 41], '18': [190, 43], '19': [200, 45], '20': [215, 47] },
+};
+const SUFFIXES = [
+  [/^(2RS1|2RSH|2RSR|2RS|2RSL|LLU|DDU|2RZ|2RS2)$/, { tr: 'Her iki yanda temaslı conta (toz ve suya karşı)', en: 'Contact seals on both sides (dust and water)' }],
+  [/^(RS1|RSH|RS|RSR|LU|DU|RZ)$/, { tr: 'Tek yanda temaslı conta', en: 'Contact seal on one side' }],
+  [/^(2Z|ZZ|2ZR|LLB|2ZNR)$/, { tr: 'Her iki yanda metal kapak (toz koruması)', en: 'Metal shields on both sides' }],
+  [/^(Z|ZR)$/, { tr: 'Tek yanda metal kapak', en: 'Metal shield on one side' }],
+  [/^C2$/, { tr: 'C2: normalden küçük iç boşluk', en: 'C2: smaller than normal internal clearance' }],
+  [/^CN$/, { tr: 'CN: normal iç boşluk', en: 'CN: normal internal clearance' }],
+  [/^C3$/, { tr: 'C3: normalden büyük iç boşluk (ısınan uygulamalar)', en: 'C3: greater than normal clearance (for warmer running)' }],
+  [/^C4$/, { tr: 'C4: C3\'ten büyük iç boşluk', en: 'C4: clearance greater than C3' }],
+  [/^C5$/, { tr: 'C5: C4\'ten büyük iç boşluk', en: 'C5: clearance greater than C4' }],
+  [/^K$/, { tr: 'Konik delik (1:12), adaptör/çektirme manşonuyla montaj', en: 'Tapered bore (1:12) for adapter or withdrawal sleeve' }],
+  [/^K30$/, { tr: 'Konik delik (1:30)', en: 'Tapered bore (1:30)' }],
+  [/^(E|EC|ECP|ECJ|ECM|ECML|EK|EAK)$/, { tr: 'Geliştirilmiş iç tasarım (daha yüksek yük kapasitesi)', en: 'Improved internal design (higher load rating)' }],
+  [/^(CC|CA|CAK|CCK|MB|CAM)$/, { tr: 'Oynak makaralı rulman iç tasarım varyantı', en: 'Spherical roller bearing design variant' }],
+  [/^(M|MA|MB|MP)$/, { tr: 'Pirinç kafes', en: 'Machined brass cage' }],
+  [/^(J|JR|JN)$/, { tr: 'Sac (çelik) kafes', en: 'Pressed steel cage' }],
+  [/^(TN|TN9|TVP|TVH|TVP2|P|PH)$/, { tr: 'Poliamid (cam elyaf takviyeli) kafes', en: 'Polyamide (glass fibre) cage' }],
+  [/^N$/, { tr: 'Dış bilezikte segman yuvası', en: 'Snap ring groove in the outer ring' }],
+  [/^NR$/, { tr: 'Segman yuvası ve segman', en: 'Snap ring groove with snap ring' }],
+  [/^W33$/, { tr: 'Dış bilezikte yağlama kanalı ve delikleri', en: 'Lubrication groove and holes in the outer ring' }],
+  [/^VA405$/, { tr: 'Titreşimli elek uygulamaları için', en: 'For vibrating screen applications' }],
+  [/^(P6|P5|P4|P2)$/, { tr: 'Hassasiyet sınıfı', en: 'Tolerance class' }],
+  [/^B$/, { tr: '40° temas açısı', en: '40° contact angle' }],
+  [/^(BE|BEP|BECBP|BECBM|BECBY)$/, { tr: '40° temas açısı, geliştirilmiş tasarım', en: '40° contact angle, improved design' }],
+  [/^(ES|ES2RS|E|ESX)$/, { tr: 'Çelik/çelik kayma yüzeyi (bakım gerektirir)', en: 'Steel-on-steel sliding surface (requires maintenance)' }],
+  [/^(HT|GJN|LHT23|MT33)$/, { tr: 'Özel gres dolgusu', en: 'Special grease fill' }],
+];
