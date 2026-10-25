@@ -61,6 +61,12 @@ const LOGO = `<svg class="logo-svg" viewBox="0 0 172 44" role="img" aria-label="
   ${[...Array(8)].map((_, i) => { const a = (i * Math.PI) / 4; return `<circle cx="${(22 + 14.2 * Math.cos(a)).toFixed(2)}" cy="${(22 + 14.2 * Math.sin(a)).toFixed(2)}" r="3.2" class="lg-ball"/>`; }).join('')}
   <text x="52" y="27" class="lg-word">RXX</text><text x="53" y="40" class="lg-sub">RULMAN · GÜÇ AKTARIM</text></svg>`;
 
+/* Language flags (SVG, so they render on every OS) */
+const FLAGS = {
+  tr: '<svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.25" cy="10" r="4" fill="#E30A17"/><polygon fill="#fff" points="13.20,10.00 14.83,9.44 14.86,7.72 15.89,9.10 17.54,8.59 16.55,10.00 17.54,11.41 15.89,10.90 14.86,12.28 14.83,10.56"/></svg>',
+  en: '<svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0L0 30" stroke="#C8102E" stroke-width="2.5"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>',
+};
+
 /* ---------------- Catalogue model ---------------- */
 const BRAND_RE = new RegExp('\\b(' + BRANDS.map((b) => b.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'i');
 const cat = (id) => CATS.find((c) => c.id === id);
@@ -268,13 +274,11 @@ function home() {
         <h1>${t('heroTitle')}</h1>
         <p class="lead">${t('heroLead')}</p>
         <div class="hero-acts"><a class="btn btn-main" href="#/urunler">${t('heroCta')} ${I.arrow}</a><a class="btn btn-ghost" href="#/kod">${I.bearing} ${t('heroCta2')}</a></div>
+        <button class="hero-ai" data-ai><span class="hero-ai-av">${I.ai}</span><span><b>${lang === 'tr' ? 'AI Asistan' : 'AI Assistant'}</b><small>${lang === 'tr' ? 'Rulman kodu, ölçü veya muadil sorun' : 'Ask for a code, a size or an equivalent'}</small></span>${I.arrow}</button>
       </div>
       <div class="hero-art rv" aria-hidden="true">
         <canvas id="bearing"></canvas>
-        <div class="spec s1"><small>d</small><b>25 mm</b></div>
-        <div class="spec s2"><small>D</small><b>52 mm</b></div>
-        <div class="spec s3"><small>B</small><b>15 mm</b></div>
-        <div class="spec code">6205-2RS C3</div>
+        <div class="plate"><span>6205-2RS C3</span><i></i><span>Ø25 × Ø52 × 15 mm</span></div>
       </div>
     </div>
     <div class="wrap"><div class="stats rv">
@@ -458,8 +462,8 @@ const notFound = () => pageHead('404', [['404']]) + `<section class="sec"><div c
 function renderChrome() {
   document.documentElement.lang = lang;
   $('#logo').innerHTML = LOGO;
-  $('#langBtn').textContent = lang === 'tr' ? 'EN' : 'TR';
-  $('#langBtn').setAttribute('aria-label', lang === 'tr' ? 'Switch to English' : 'Türkçeye geç');
+  $('#langSw').innerHTML = [['tr', 'Türkçe'], ['en', 'English']].map(([l, n]) => `<button data-lang="${l}" class="${l === lang ? 'on' : ''}" aria-pressed="${l === lang}" title="${n}">${FLAGS[l]}<span>${l.toUpperCase()}</span></button>`).join('');
+  $('#aiPill').innerHTML = `${I.ai}<span>${lang === 'tr' ? 'AI Asistan' : 'AI Assistant'}</span>`;
   $('#tbLeft').innerHTML = `<a href="${COMPANY.phoneHref}">${I.phone} ${COMPANY.phones[0]}</a><a href="mailto:${COMPANY.email}" class="hide-s">${I.mail} ${COMPANY.email}</a>`;
   $('#tbRight').innerHTML = `<a href="#/kod" class="tb-hi">${I.bearing} ${t('decoder')}</a><span class="tb-sep"></span>${['facebook', 'instagram', 'linkedin'].map((k) => `<a href="${COMPANY.social[k]}" target="_blank" rel="noopener" aria-label="${k}">${I[k]}</a>`).join('')}`;
   $('#nav').innerHTML = `
@@ -483,7 +487,10 @@ function renderChrome() {
     <a class="dk wa" href="${COMPANY.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp">${I.whatsapp}<span class="tip">WhatsApp</span></a>
     <a class="dk ig" href="${COMPANY.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${I.instagram}<span class="tip">Instagram</span></a>
     <a class="dk li" href="${COMPANY.social.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn">${I.linkedin}<span class="tip">LinkedIn</span></a>
-    <button class="dk ai" data-ai aria-label="AI">${I.ai}<span class="tip">${lang === 'tr' ? 'Yapay Zekâ Asistanı' : 'AI Assistant'}</span></button>`;
+    <div class="dk-ai-wrap">
+      <div class="ai-teaser" id="aiTeaser" hidden><button class="ai-teaser-x" aria-label="Kapat">${I.x}</button><p>${lang === 'tr' ? '👋 Merhaba! Rulman kodu, ölçü ya da muadil sorabilirsiniz.' : '👋 Hi! Ask me for a bearing code, a size or an equivalent.'}</p><button class="ai-teaser-go" data-ai>${lang === 'tr' ? 'Sohbeti başlat' : 'Start chat'} ${I.arrow}</button></div>
+      <button class="dk-ai" data-ai aria-label="${lang === 'tr' ? 'AI Asistanı aç' : 'Open AI assistant'}"><span class="dk-ai-av">${I.ai}</span><span class="dk-ai-t"><b>${lang === 'tr' ? 'AI Asistan' : 'AI Assistant'}</b><small><i class="dot"></i> ${lang === 'tr' ? 'Çevrimiçi' : 'Online'}</small></span></button>
+    </div>`;
   $('#aiAv').innerHTML = I.bearing;
   $('#aiStatus').textContent = lang === 'tr' ? 'Çevrimiçi · rulman kodlarını da çözer' : 'Online · decodes bearing codes too';
   $('#aiText').placeholder = lang === 'tr' ? 'Ürün, marka veya rulman kodu yazın…' : 'Type a product, brand or bearing code…';
@@ -596,47 +603,117 @@ function runDemo() {
   step();
 }
 
-/* ---------------- Hero bearing animation ---------------- */
+/* ---------------- Hero bearing (photoreal render + technical drawing) ---------------- */
 let raf;
 function spinBearing() {
   cancelAnimationFrame(raf);
   const cv = $('#bearing'), ctx = cv.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let size = 0, a = 0;
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const TAU = Math.PI * 2;
+  let size = 0, a = 0;
   const resize = () => { const dpr = Math.min(devicePixelRatio || 1, 2); size = cv.offsetWidth; cv.width = cv.height = size * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
-  const ring = (r1, r2, c1, c2) => {
-    const g = ctx.createLinearGradient(-r1, -r1, r1, r1); g.addColorStop(0, c1); g.addColorStop(0.5, c2); g.addColorStop(1, c1);
-    ctx.beginPath(); ctx.arc(0, 0, r1, 0, 7); ctx.arc(0, 0, r2, 0, 7, true); ctx.fillStyle = g; ctx.fill();
+
+  // brushed steel: many soft light/dark bands around the ring, fixed to the light source
+  const steel = (r, tint = 0) => {
+    if (!ctx.createConicGradient) { const g = ctx.createLinearGradient(-r, -r, r, r); g.addColorStop(0, '#f1f3f5'); g.addColorStop(.5, '#8d96a0'); g.addColorStop(1, '#e6e9ec'); return g; }
+    const g = ctx.createConicGradient(-Math.PI / 4, 0, 0);
+    const stops = ['#f4f6f8', '#c3c9cf', '#8a939d', '#d9dde1', '#a7aeb6', '#eef1f3', '#7f8892', '#c9ced3', '#f4f6f8'];
+    stops.forEach((c, i) => g.addColorStop(i / (stops.length - 1), c));
+    return g;
   };
+  const annulus = (r1, r2, fill) => { ctx.beginPath(); ctx.arc(0, 0, r1, 0, TAU); ctx.arc(0, 0, r2, 0, TAU, true); ctx.fillStyle = fill; ctx.fill(); };
+  const rim = (r, color, w) => { ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.strokeStyle = color; ctx.lineWidth = w; ctx.stroke(); };
+  const depth = (r1, r2, inward) => { // soft shading across a ring face
+    const g = ctx.createRadialGradient(0, 0, r2, 0, 0, r1);
+    g.addColorStop(0, inward ? 'rgba(0,0,0,.28)' : 'rgba(255,255,255,.18)'); g.addColorStop(.5, 'rgba(0,0,0,0)'); g.addColorStop(1, inward ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.25)');
+    annulus(r1, r2, g);
+  };
+  const arcText = (txt, r, start, fontPx, color) => {
+    ctx.save(); ctx.font = `600 ${fontPx}px "IBM Plex Mono", monospace`; ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    let ang = start - (ctx.measureText(txt).width / r) / 2;
+    for (const ch of txt) { const w = ctx.measureText(ch).width; ang += (w / r) / 2; ctx.save(); ctx.rotate(ang); ctx.translate(0, -r); ctx.fillText(ch, 0, 0); ctx.restore(); ang += (w / r) / 2; }
+    ctx.restore();
+  };
+  const arrow = (x, y, dir) => { ctx.save(); ctx.translate(x, y); ctx.rotate(dir); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-7, -3); ctx.lineTo(-7, 3); ctx.closePath(); ctx.fill(); ctx.restore(); };
+
   const draw = () => {
     if (!document.body.contains(cv)) return;
-    const R = size / 2; ctx.clearRect(0, 0, size, size); ctx.save(); ctx.translate(R, R);
-    const steelA = css('--steel-a'), steelB = css('--steel-b'), acc = css('--acc');
-    // outer ring, raceway shadow, inner ring
-    ring(R * 0.96, R * 0.74, steelA, steelB);
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.74, 0, 7); ctx.arc(0, 0, R * 0.42, 0, 7, true); ctx.fillStyle = css('--race'); ctx.fill();
-    // rotating cage + balls
-    ctx.save(); ctx.rotate(a * 0.55);
-    ctx.strokeStyle = acc; ctx.lineWidth = R * 0.035; ctx.beginPath(); ctx.arc(0, 0, R * 0.58, 0, 7); ctx.stroke();
-    const n = 9;
-    for (let i = 0; i < n; i++) {
-      const th = (i / n) * Math.PI * 2, x = Math.cos(th) * R * 0.58, y = Math.sin(th) * R * 0.58, r = R * 0.135;
-      const g = ctx.createRadialGradient(x - r * 0.4, y - r * 0.45, r * 0.1, x, y, r);
-      g.addColorStop(0, '#ffffff'); g.addColorStop(0.35, steelB); g.addColorStop(1, steelA);
-      ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = g; ctx.fill();
+    const S = size, c = S / 2, R = S * 0.37;
+    const gold = css('--gold') || '#b8935a', muted = css('--muted'), bg = css('--bg');
+    ctx.clearRect(0, 0, S, S);
+    ctx.save(); ctx.translate(c, c * 0.94);
+
+    // technical drawing: centre lines and dimension lines
+    ctx.save(); ctx.strokeStyle = gold; ctx.fillStyle = gold; ctx.globalAlpha = .75; ctx.lineWidth = 1;
+    ctx.setLineDash([14, 4, 2, 4]);
+    ctx.beginPath(); ctx.moveTo(-R * 1.22, 0); ctx.lineTo(R * 1.22, 0); ctx.moveTo(0, -R * 1.22); ctx.lineTo(0, R * 1.22); ctx.stroke();
+    ctx.setLineDash([]);
+    const yD = R * 1.2; // outside diameter
+    ctx.beginPath(); ctx.moveTo(-R, R * 0.2); ctx.lineTo(-R, yD + 6); ctx.moveTo(R, R * 0.2); ctx.lineTo(R, yD + 6); ctx.moveTo(-R, yD); ctx.lineTo(R, yD); ctx.stroke();
+    arrow(-R, yD, Math.PI); arrow(R, yD, 0);
+    const rb = R * 0.32, xd = R * 1.18; // bore
+    ctx.beginPath(); ctx.moveTo(rb * .2, -rb); ctx.lineTo(xd + 6, -rb); ctx.moveTo(rb * .2, rb); ctx.lineTo(xd + 6, rb); ctx.moveTo(xd, -rb); ctx.lineTo(xd, rb); ctx.stroke();
+    arrow(xd, -rb, -Math.PI / 2); arrow(xd, rb, Math.PI / 2);
+    ctx.globalAlpha = 1; ctx.font = `600 ${Math.max(11, S * 0.026)}px "IBM Plex Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Ø52', 0, yD - 5);
+    ctx.save(); ctx.translate(xd + 8, 0); ctx.rotate(Math.PI / 2); ctx.fillText('Ø25', 0, 0); ctx.restore();
+    ctx.restore();
+
+    // soft cast shadow and warm key light
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = R * 0.22; ctx.shadowOffsetY = R * 0.08;
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU); ctx.arc(0, 0, R * 0.32, 0, TAU, true); ctx.fillStyle = '#5c646d'; ctx.fill(); ctx.restore();
+
+    // outer ring (stationary)
+    annulus(R, R * 0.79, steel(R)); depth(R, R * 0.79, false);
+    rim(R - .5, 'rgba(0,0,0,.45)', 1); rim(R * 0.985, 'rgba(255,255,255,.75)', 1.2); rim(R * 0.80, 'rgba(255,255,255,.6)', 1); rim(R * 0.79, 'rgba(0,0,0,.5)', 1.2);
+    arcText('RXX · 6205-2RS C3 · ISO 15', R * 0.895, -Math.PI / 2, Math.max(8, S * 0.017), 'rgba(40,46,54,.55)');
+
+    // raceway recess
+    const rg = ctx.createRadialGradient(0, 0, R * 0.5, 0, 0, R * 0.79);
+    rg.addColorStop(0, '#2a2f35'); rg.addColorStop(.5, '#14171b'); rg.addColorStop(1, '#2d3238');
+    annulus(R * 0.79, R * 0.5, rg);
+
+    // cage (pressed steel, ~0.4× shaft speed)
+    const Rp = R * 0.645, rBall = R * 0.118, n = 9, cageA = a * 0.4;
+    ctx.save(); ctx.rotate(cageA);
+    const cg = ctx.createLinearGradient(-Rp, -Rp, Rp, Rp); cg.addColorStop(0, '#b8a07a'); cg.addColorStop(.5, '#e7d6b2'); cg.addColorStop(1, '#8c7550');
+    annulus(Rp + R * 0.055, Rp - R * 0.055, cg);
+    rim(Rp + R * 0.055, 'rgba(0,0,0,.35)', 1); rim(Rp - R * 0.055, 'rgba(0,0,0,.35)', 1);
+    for (let i = 0; i < n; i++) { // rivets between pockets
+      const th = ((i + .5) / n) * TAU; ctx.beginPath(); ctx.arc(Math.cos(th) * Rp, Math.sin(th) * Rp, R * 0.016, 0, TAU); ctx.fillStyle = '#6e5b3c'; ctx.fill();
     }
     ctx.restore();
-    // inner ring rotates with the shaft
+
+    // balls: light stays fixed top-left while they orbit
+    for (let i = 0; i < n; i++) {
+      const th = (i / n) * TAU + cageA, x = Math.cos(th) * Rp, y = Math.sin(th) * Rp;
+      ctx.beginPath(); ctx.ellipse(x + rBall * .18, y + rBall * .22, rBall, rBall * .95, 0, 0, TAU); ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fill();
+      const g = ctx.createRadialGradient(x - rBall * .38, y - rBall * .42, rBall * .05, x, y, rBall);
+      g.addColorStop(0, '#ffffff'); g.addColorStop(.18, '#eef1f4'); g.addColorStop(.55, '#9aa3ad'); g.addColorStop(.85, '#4b525a'); g.addColorStop(1, '#2b3036');
+      ctx.beginPath(); ctx.arc(x, y, rBall, 0, TAU); ctx.fillStyle = g; ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x + rBall * .25, y + rBall * .45, rBall * .45, rBall * .12, -0.5, 0, TAU); ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fill();
+    }
+
+    // inner ring: finish stays lit from the same side, engraving turns with the shaft
+    annulus(R * 0.5, R * 0.32, steel(R * 0.5)); depth(R * 0.5, R * 0.32, true);
+    rim(R * 0.5, 'rgba(0,0,0,.5)', 1.2); rim(R * 0.49, 'rgba(255,255,255,.7)', 1); rim(R * 0.33, 'rgba(255,255,255,.55)', 1); rim(R * 0.32, 'rgba(0,0,0,.55)', 1.2);
     ctx.save(); ctx.rotate(a);
-    ring(R * 0.42, R * 0.24, steelA, steelB);
-    ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1.5;
-    for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(0, 0, R * 0.33, i * 2.1, i * 2.1 + 0.6); ctx.stroke(); }
+    arcText('MADE FOR MOTION · RXX', R * 0.41, 0, Math.max(7, S * 0.014), 'rgba(40,46,54,.6)');
+    for (let i = 0; i < 4; i++) { ctx.save(); ctx.rotate(Math.PI + i * 0.09); ctx.fillStyle = 'rgba(40,46,54,.4)'; ctx.fillRect(-0.6, -R * 0.465, 1.2, R * 0.05); ctx.restore(); }
     ctx.restore();
-    // shaft
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.24, 0, 7); ctx.fillStyle = css('--bg'); ctx.fill();
+
+    // bore
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.32, 0, TAU); ctx.fillStyle = bg; ctx.fill();
+    const bgG = ctx.createRadialGradient(0, 0, R * 0.2, 0, 0, R * 0.32); bgG.addColorStop(0, 'rgba(0,0,0,0)'); bgG.addColorStop(1, 'rgba(0,0,0,.25)');
+    ctx.fillStyle = bgG; ctx.fill();
+
+    // specular sweep over the whole part
+    const sp = ctx.createLinearGradient(-R, -R, R * .2, R * .2); sp.addColorStop(0, 'rgba(255,255,255,0)'); sp.addColorStop(.45, 'rgba(255,255,255,.12)'); sp.addColorStop(.55, 'rgba(255,255,255,0)');
+    annulus(R, R * 0.32, sp);
+
     ctx.restore();
-    a += 0.012;
+    a += 0.0045;
     if (!reduce) raf = requestAnimationFrame(draw);
   };
   resize(); draw();
@@ -659,7 +736,20 @@ function closeMenus() {
   nav.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); document.body.classList.remove('lock');
   $$('.dd-wrap').forEach((d) => { d.classList.remove('exp'); d.classList.add('off'); setTimeout(() => d.classList.remove('off'), 250); });
 }
-$('#langBtn').addEventListener('click', () => { lang = lang === 'tr' ? 'en' : 'tr'; try { localStorage.setItem('rxx-lang', lang); } catch (e) {} renderChrome(); render(); greeted = false; $('#aiBody').innerHTML = ''; });
+$('#langSw').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-lang]');
+  if (!b || b.dataset.lang === lang) return;
+  lang = b.dataset.lang; try { localStorage.setItem('rxx-lang', lang); } catch (e2) {}
+  renderChrome(); render(); greeted = false; $('#aiBody').innerHTML = '';
+});
+// greeting bubble next to the assistant button, once per visit
+setTimeout(() => {
+  let seen = false; try { seen = sessionStorage.getItem('rxx-teaser') === '1'; } catch (e) {}
+  if (!seen && !$('#ai').classList.contains('open')) $('#aiTeaser')?.removeAttribute('hidden');
+}, 3500);
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.ai-teaser-x, [data-ai]')) { $('#aiTeaser')?.setAttribute('hidden', ''); try { sessionStorage.setItem('rxx-teaser', '1'); } catch (e2) {} }
+});
 $('#themeBtn').addEventListener('click', () => {
   const r = document.documentElement;
   const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
